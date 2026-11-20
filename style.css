@@ -1,0 +1,193 @@
+/* ============================================================
+   ITE 170 - Outdoor Photo Gallery
+   CSS Grid Layout with Grayscale-to-Color Hover Effect
+   ============================================================ */
+
+/* ---------- Reset & Base Styles ---------- */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* ---------- Header ---------- */
+
+header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    background: linear-gradient(135deg, #16213e, #0f3460);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #e94560;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+header p {
+    font-size: 1.1rem;
+    color: #a0a0b8;
+    font-style: italic;
+}
+
+/* ---------- Gallery Grid ---------- */
+/*
+   CSS GRID LAYOUT
+   - Uses auto-fill with minmax() for a responsive grid
+   - Each column is at least 300px wide, grows to fill space
+   - Gap controls the spacing between grid items
+*/
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ---------- Gallery Item (Each Photo Card) ---------- */
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    aspect-ratio: 4 / 3;
+
+    /*
+       GRAYSCALE EFFECT:
+       - filter: grayscale(100%) makes the image black & white
+       - On hover, grayscale transitions to 0% (full color)
+       - transition controls how smoothly the effect changes
+    */
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+
+    /* === THE KEY EFFECT: Grayscale Filter === */
+    filter: grayscale(100%);
+    transition: filter 0.6s ease, transform 0.6s ease;
+}
+
+/*
+   HOVER STATE:
+   When the user hovers over a gallery item,
+   the image filter changes from grayscale to full color
+   and the image slightly zooms in for a dynamic feel.
+*/
+
+.gallery-item:hover img {
+    filter: grayscale(0%);       /* Reveal true color */
+    transform: scale(1.08);      /* Slight zoom effect */
+}
+
+/* ---------- Caption Overlay ---------- */
+/*
+   The caption sits at the bottom of each photo card.
+   It slides up into view on hover using transform.
+*/
+
+.caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+    padding: 2rem 1rem 1rem;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+}
+
+.gallery-item:hover .caption {
+    transform: translateY(0);    /* Slide caption into view */
+}
+
+.caption h3 {
+    font-size: 1.1rem;
+    color: #e94560;
+    margin-bottom: 0.25rem;
+}
+
+.caption p {
+    font-size: 0.9rem;
+    color: #c0c0d0;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #16213e;
+    color: #a0a0b8;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+}
+
+/* ---------- Responsive Adjustments ---------- */
+
+/* Tablets and smaller screens */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .gallery {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    .caption {
+        transform: translateY(0);  /* Always show captions on mobile */
+    }
+
+    .gallery-item img {
+        filter: grayscale(0%);     /* Show color on mobile (no hover) */
+    }
+}
+
+/* Keyboard navigation and touch-friendly captions */
+.gallery-item:focus-visible { outline: 3px solid #f9c784; outline-offset: 3px; }
+.gallery-item:focus img { filter: grayscale(0%); transform: scale(1.08); }
+.gallery-item:focus .caption { transform: translateY(0); }
+@media (hover: none) {
+    .gallery-item img { filter: grayscale(0%); }
+    .caption { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .gallery-item img, .caption { transition: none; }
+}
